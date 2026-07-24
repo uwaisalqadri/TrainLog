@@ -85,8 +85,7 @@ private struct ExerciseSection: View {
                 TextField("Reps", text: $repsText)
                     .keyboardType(.numberPad)
                 Button("Add Set") {
-                    guard let weight = Double(weightText), weight > 0,
-                          let reps = Int(repsText), reps > 0 else { return }
+                    guard let weight = parsedWeight, let reps = parsedReps else { return }
                     onAdd(weight, reps)
                     weightText = ""
                     repsText = ""
@@ -96,10 +95,18 @@ private struct ExerciseSection: View {
         }
     }
 
+    private var parsedWeight: Double? {
+        guard let weight = Double(weightText.replacingOccurrences(of: ",", with: ".")), weight > 0 else { return nil }
+        return weight
+    }
+
+    private var parsedReps: Int? {
+        guard let reps = Int(repsText), reps > 0 else { return nil }
+        return reps
+    }
+
     private var isValidInput: Bool {
-        guard let weight = Double(weightText), weight > 0,
-              let reps = Int(repsText), reps > 0 else { return false }
-        return true
+        parsedWeight != nil && parsedReps != nil
     }
 }
 
