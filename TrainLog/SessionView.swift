@@ -4,7 +4,9 @@ import SwiftData
 struct SessionView: View {
     @Bindable var session: WorkoutSession
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     @State private var copiedFeedback = false
+    @State private var didSave = false
 
     private var exerciseNames: [String] {
         WorkoutTemplate.template(named: session.templateName)?.exerciseNames ?? []
@@ -12,6 +14,10 @@ struct SessionView: View {
 
     var body: some View {
         Form {
+            Section("Date") {
+                DatePicker("Date", selection: $session.date, displayedComponents: .date)
+            }
+
             ForEach(exerciseNames, id: \.self) { name in
                 ExerciseSection(
                     exerciseName: name,
@@ -38,6 +44,13 @@ struct SessionView: View {
         .navigationTitle(session.date.formatted(date: .abbreviated, time: .omitted))
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Save") {
+                    try? modelContext.save()
+                    didSave = true
+                    dismiss()
+                }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button(copiedFeedback ? "Copied!" : "Copy as Text") {
                     UIPasteboard.general.string = SessionTextFormatter.text(for: session)
                     copiedFeedback = true
@@ -45,6 +58,11 @@ struct SessionView: View {
                         copiedFeedback = false
                     }
                 }
+            }
+        }
+        .onDisappear {
+            if !didSave {
+                modelContext.rollback()
             }
         }
     }

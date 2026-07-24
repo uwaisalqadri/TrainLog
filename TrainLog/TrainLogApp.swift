@@ -21,6 +21,7 @@ struct TrainLogApp: App {
         #if DEBUG
         SessionTextFormatter.runSelfTest()
         #endif
+        sharedModelContainer.mainContext.autosaveEnabled = false
     }
 
     var body: some Scene {
