@@ -5,7 +5,6 @@ struct SessionView: View {
     @Bindable var session: WorkoutSession
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
-    @State private var copiedFeedback = false
     @State private var didSave = false
 
     private var exerciseNames: [String] {
@@ -45,18 +44,10 @@ struct SessionView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Save") {
+                    UIPasteboard.general.string = SessionTextFormatter.text(for: session)
                     try? modelContext.save()
                     didSave = true
                     dismiss()
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(copiedFeedback ? "Copied!" : "Copy as Text") {
-                    UIPasteboard.general.string = SessionTextFormatter.text(for: session)
-                    copiedFeedback = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                        copiedFeedback = false
-                    }
                 }
             }
         }
