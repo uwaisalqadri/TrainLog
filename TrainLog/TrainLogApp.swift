@@ -1,10 +1,3 @@
-//
-//  TrainLogApp.swift
-//  TrainLog
-//
-//  Created by Uwais Alqadri on 24/07/26.
-//
-
 import SwiftUI
 import SwiftData
 
@@ -12,7 +5,8 @@ import SwiftData
 struct TrainLogApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            WorkoutSession.self,
+            ExerciseSet.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -22,6 +16,12 @@ struct TrainLogApp: App {
             fatalError("Could not create ModelContainer: \(error)")
         }
     }()
+
+    init() {
+        #if DEBUG
+        SessionTextFormatter.runSelfTest()
+        #endif
+    }
 
     var body: some Scene {
         WindowGroup {

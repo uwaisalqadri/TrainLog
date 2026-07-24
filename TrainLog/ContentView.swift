@@ -1,61 +1,61 @@
-//
-//  ContentView.swift
-//  TrainLog
-//
-//  Created by Uwais Alqadri on 24/07/26.
-//
-
 import SwiftUI
 import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @Query(sort: \WorkoutSession.date, order: .reverse) private var sessions: [WorkoutSession]
+    @State private var path = NavigationPath()
 
     var body: some View {
-        NavigationSplitView {
+        NavigationStack(path: $path) {
             List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                Section("Start Workout") {
+                    ForEach(WorkoutTemplate.all) { template in
+                        Button(template.name) {
+                            startSession(for: template)
+                        }
                     }
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+
+                Section("History") {
+                    if sessions.isEmpty {
+                        Text("No sessions yet")
+                            .foregroundStyle(.secondary)
                     }
+                    ForEach(sessions) { session in
+                        NavigationLink(value: session) {
+                            VStack(alignment: .leading) {
+                                Text(session.templateName)
+                                Text(session.date.formatted(date: .abbreviated, time: .shortened))
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                    .onDelete(perform: deleteSessions)
                 }
             }
-        } detail: {
-            Text("Select an item")
+            .navigationTitle("TrainLog")
+            .navigationDestination(for: WorkoutSession.self) { session in
+                SessionView(session: session)
+            }
         }
     }
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
+    private func startSession(for template: WorkoutTemplate) {
+        let session = WorkoutSession(templateName: template.name)
+        modelContext.insert(session)
+        path.append(session)
     }
 
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
+    private func deleteSessions(offsets: IndexSet) {
+        for index in offsets {
+            modelContext.delete(sessions[index])
         }
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .modelContainer(for: [WorkoutSession.self, ExerciseSet.self], inMemory: true)
 }
