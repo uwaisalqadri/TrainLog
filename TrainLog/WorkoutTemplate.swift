@@ -8,6 +8,7 @@ struct WorkoutTemplate: Identifiable {
     static let all: [WorkoutTemplate] = [
         WorkoutTemplate(name: "Gym", exerciseNames: [
             "Bench DB Press",
+            "Incline DB Press",
             "Overhead Press",
             "Lat Pull",
             "Cable Triceps Pressdown"
