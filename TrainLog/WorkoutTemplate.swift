@@ -6,7 +6,12 @@ struct WorkoutTemplate: Identifiable {
     let exerciseNames: [String]
 
     static let all: [WorkoutTemplate] = [
-        WorkoutTemplate(name: "Gym", exerciseNames: ["Bench DB Press", "Overhead Press", "Lat Pull"])
+        WorkoutTemplate(name: "Gym", exerciseNames: [
+            "Bench DB Press",
+            "Overhead Press",
+            "Lat Pull",
+            "Cable Triceps Pressdown"
+        ])
     ]
 
     static func template(named name: String) -> WorkoutTemplate? {

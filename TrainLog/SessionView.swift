@@ -24,7 +24,6 @@ struct SessionView: View {
                     onAdd: { weight, reps in
                         let set = ExerciseSet(exerciseName: name, weight: weight, reps: reps)
                         set.session = session
-                        modelContext.insert(set)
                         session.sets.append(set)
                     },
                     onDelete: { set in
@@ -45,6 +44,7 @@ struct SessionView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Save") {
                     UIPasteboard.general.string = SessionTextFormatter.text(for: session)
+                    modelContext.insert(session)
                     try? modelContext.save()
                     didSave = true
                     dismiss()

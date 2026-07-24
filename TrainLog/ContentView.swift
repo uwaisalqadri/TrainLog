@@ -71,7 +71,6 @@ struct ContentView: View {
 
     private func startSession(for template: WorkoutTemplate) {
         let session = WorkoutSession(templateName: template.name)
-        modelContext.insert(session)
         path.append(session)
     }
 
