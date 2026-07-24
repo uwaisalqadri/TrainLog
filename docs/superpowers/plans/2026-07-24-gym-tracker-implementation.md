@@ -216,8 +216,10 @@ enum SessionTextFormatter {
 ```bash
 cat TrainLog/WorkoutTemplate.swift TrainLog/WorkoutSession.swift TrainLog/SessionTextFormatter.swift > /tmp/formatter_check.swift
 echo 'SessionTextFormatter.runSelfTest()' >> /tmp/formatter_check.swift
-swift /tmp/formatter_check.swift
+swift -D DEBUG /tmp/formatter_check.swift
 ```
+
+`-D DEBUG` is required — `runSelfTest()` is wrapped in `#if DEBUG`, which the `swift` command-line tool does not define by default (unlike an Xcode Debug build, which sets it via `SWIFT_ACTIVE_COMPILATION_CONDITIONS`).
 
 Expected: prints `SessionTextFormatter self-test passed`, exits with code 0 (no assertion crash / stack trace).
 
