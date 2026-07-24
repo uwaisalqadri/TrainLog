@@ -80,6 +80,29 @@ enum SessionTextFormatter {
         emptySession.cardioDuration = "30 min"
         assert(cardioText(for: emptySession) == "Running - 30 min", "cardio text failed: \(cardioText(for: emptySession))")
 
+        // End-to-end test: text(for:) with fully-populated session
+        var fixedDateComponents = DateComponents()
+        fixedDateComponents.year = 2026
+        fixedDateComponents.month = 7
+        fixedDateComponents.day = 24
+        fixedDateComponents.hour = 12
+        fixedDateComponents.minute = 0
+        let fixedDate = Calendar.current.date(from: fixedDateComponents)!
+
+        let endToEndSession = WorkoutSession(templateName: "Gym", date: fixedDate)
+        let e1 = ExerciseSet(exerciseName: "Bench DB Press", weight: 17.5, reps: 10)
+        let e2 = ExerciseSet(exerciseName: "Bench DB Press", weight: 17.5, reps: 10)
+        let e3 = ExerciseSet(exerciseName: "Bench DB Press", weight: 20, reps: 8)
+        let e4 = ExerciseSet(exerciseName: "Overhead Press", weight: 20, reps: 8)
+        endToEndSession.sets = [e1, e2, e3, e4]
+        // cardio fields left empty (default empty strings from init)
+
+        let dateString = fixedDate.formatted(.dateTime.month(.abbreviated).day())
+        let expected = "🏋️ Gym – \(dateString)\n\nHighest Weight: 20 kg\n\nExercises:\n- Bench DB Press — 17.5kg x10 (x2 sets), 20kg x8\n- Overhead Press — 20kg x8\n\nCardio:\n- No"
+
+        let result = text(for: endToEndSession)
+        assert(result == expected, "text(for:) end-to-end formatting failed:\nExpected:\n\(expected)\n\nGot:\n\(result)")
+
         print("SessionTextFormatter self-test passed")
     }
     #endif
