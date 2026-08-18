@@ -4,7 +4,7 @@ enum SessionTextFormatter {
     static func text(for session: WorkoutSession) -> String {
         var lines: [String] = []
         let dateString = session.date.formatted(.dateTime.month(.abbreviated).day())
-        lines.append("🏋️ \(session.templateName) – \(dateString)")
+        lines.append("🏋️ \(session.displayName) – \(dateString)")
         lines.append("")
 
         if let highest = session.sets.map(\.weight).max() {
@@ -13,7 +13,10 @@ enum SessionTextFormatter {
         }
 
         lines.append("Exercises:")
-        let exerciseNames = WorkoutTemplate.template(named: session.templateName)?.exerciseNames ?? []
+        var exerciseNames = WorkoutTemplate.template(named: session.templateName)?.exerciseNames ?? []
+        for set in session.sets where !exerciseNames.contains(set.exerciseName) {
+            exerciseNames.append(set.exerciseName)
+        }
         for name in exerciseNames {
             let sets = session.sets.filter { $0.exerciseName == name }
             guard !sets.isEmpty else { continue }
@@ -66,6 +69,11 @@ enum SessionTextFormatter {
         let grouped = groupedSetsText(session.sets.filter { $0.exerciseName == "Bench DB Press" })
         assert(grouped == "17.5kg x10 (x2 sets), 20kg x8", "grouping failed: \(grouped)")
 
+        assert(session.displayName == "Gym", "displayName should fall back to templateName when customName is empty")
+        session.customName = "Leg Day"
+        assert(session.displayName == "Leg Day", "displayName should prefer a non-empty customName")
+        session.customName = ""
+
         let singleSetSession = WorkoutSession(templateName: "Gym", date: Date())
         let single = ExerciseSet(exerciseName: "Overhead Press", weight: 20, reps: 8)
         singleSetSession.sets = [single]
@@ -102,6 +110,13 @@ enum SessionTextFormatter {
 
         let result = text(for: endToEndSession)
         assert(result == expected, "text(for:) end-to-end formatting failed:\nExpected:\n\(expected)\n\nGot:\n\(result)")
+
+        // A user-added exercise not in the fixed template list must still show up.
+        let customExerciseSession = WorkoutSession(templateName: "Gym", date: fixedDate)
+        let customSet = ExerciseSet(exerciseName: "Cable Crossover", weight: 15, reps: 12)
+        customExerciseSession.sets = [customSet]
+        let customResult = text(for: customExerciseSession)
+        assert(customResult.contains("- Cable Crossover — 15kg x12"), "custom exercise missing from copy text:\n\(customResult)")
 
         print("SessionTextFormatter self-test passed")
     }

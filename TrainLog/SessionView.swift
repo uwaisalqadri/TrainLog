@@ -4,17 +4,25 @@ import SwiftData
 struct SessionView: View {
     @Bindable var session: WorkoutSession
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
-    @State private var didSave = false
+    @State private var copiedFeedback = false
+    @State private var addedExerciseNames: [String] = []
+    @State private var newExerciseName = ""
 
     private var exerciseNames: [String] {
-        WorkoutTemplate.template(named: session.templateName)?.exerciseNames ?? []
+        let templateNames = WorkoutTemplate.template(named: session.templateName)?.exerciseNames ?? []
+        var combined = templateNames
+        let loggedNames = session.sets.map(\.exerciseName).sorted()
+        for name in loggedNames + addedExerciseNames where !combined.contains(name) {
+            combined.append(name)
+        }
+        return combined
     }
 
     var body: some View {
         Form {
             Section("Date") {
                 DatePicker("Date", selection: $session.date, displayedComponents: .date)
+//                TextField("Workout Name (optional)", text: $session.customName)
             }
 
             ForEach(exerciseNames, id: \.self) { name in
@@ -25,12 +33,26 @@ struct SessionView: View {
                         let set = ExerciseSet(exerciseName: name, weight: weight, reps: reps)
                         set.session = session
                         session.sets.append(set)
+                        persist()
                     },
                     onDelete: { set in
                         session.sets.removeAll { $0.id == set.id }
                         modelContext.delete(set)
                     }
                 )
+            }
+
+            Section("Add Exercise") {
+                HStack {
+                    TextField("Exercise name", text: $newExerciseName)
+                    Button("Add") {
+                        let name = newExerciseName.trimmingCharacters(in: .whitespaces)
+                        guard !name.isEmpty, !exerciseNames.contains(name) else { return }
+                        addedExerciseNames.append(name)
+                        newExerciseName = ""
+                    }
+                    .disabled(newExerciseName.trimmingCharacters(in: .whitespaces).isEmpty)
+                }
             }
 
             Section("Cardio") {
@@ -42,20 +64,28 @@ struct SessionView: View {
         .navigationTitle(session.date.formatted(date: .abbreviated, time: .omitted))
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Save") {
+                Button(copiedFeedback ? "Copied!" : "Copy") {
                     UIPasteboard.general.string = SessionTextFormatter.text(for: session)
-                    modelContext.insert(session)
-                    try? modelContext.save()
-                    didSave = true
-                    dismiss()
+                    persist()
+                    copiedFeedback = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        copiedFeedback = false
+                    }
                 }
             }
         }
-        .onDisappear {
-            if !didSave {
-                modelContext.rollback()
-            }
+        .onAppear {
+            UserDefaults.standard.set(session.id.uuidString, forKey: WorkoutSession.lastOpenedIDKey)
         }
+        .onDisappear {
+            persist()
+            UserDefaults.standard.removeObject(forKey: WorkoutSession.lastOpenedIDKey)
+        }
+    }
+
+    private func persist() {
+        modelContext.insert(session)
+        try? modelContext.save()
     }
 }
 

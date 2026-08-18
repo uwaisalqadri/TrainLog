@@ -5,6 +5,7 @@ import SwiftData
 final class WorkoutSession {
     var id: UUID
     var templateName: String
+    var customName: String = ""
     var date: Date
     var cardioType: String
     var cardioDuration: String
@@ -16,12 +17,19 @@ final class WorkoutSession {
     init(templateName: String, date: Date = Date()) {
         self.id = UUID()
         self.templateName = templateName
+        self.customName = ""
         self.date = date
         self.cardioType = ""
         self.cardioDuration = ""
         self.cardioDistance = ""
         self.sets = []
     }
+
+    var displayName: String {
+        customName.isEmpty ? templateName : customName
+    }
+
+    static let lastOpenedIDKey = "lastOpenedSessionID"
 }
 
 @Model

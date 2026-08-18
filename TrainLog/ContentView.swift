@@ -5,6 +5,7 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \WorkoutSession.date, order: .reverse) private var sessions: [WorkoutSession]
     @State private var path = NavigationPath()
+    @State private var hasResumedLastSession = false
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -29,7 +30,7 @@ struct ContentView: View {
                         ForEach(group.sessions) { session in
                             NavigationLink(value: session) {
                                 VStack(alignment: .leading) {
-                                    Text(session.templateName)
+                                    Text(session.displayName)
                                     Text(session.date.formatted(date: .abbreviated, time: .shortened))
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
@@ -45,6 +46,15 @@ struct ContentView: View {
             .navigationTitle("TrainLog")
             .navigationDestination(for: WorkoutSession.self) { session in
                 SessionView(session: session)
+            }
+        }
+        .onAppear {
+            guard !hasResumedLastSession else { return }
+            hasResumedLastSession = true
+            if let idString = UserDefaults.standard.string(forKey: WorkoutSession.lastOpenedIDKey),
+               let id = UUID(uuidString: idString),
+               let session = sessions.first(where: { $0.id == id }) {
+                path.append(session)
             }
         }
     }

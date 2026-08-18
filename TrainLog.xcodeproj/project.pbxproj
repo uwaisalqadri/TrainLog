@@ -6,19 +6,47 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		371E550ED17FF9501A6CC16F /* MigrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12C434AF2964AC93E3C4507 /* MigrationTests.swift */; };
+		37670A44C1BDB1883DD439BA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 681D78EBE20F8DD165085F0D /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C8B6B3FB5081D41FB011FC1C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = ACC5A9DF301331E1001B752E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ACC5A9E6301331E1001B752E;
+			remoteInfo = TrainLog;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		681D78EBE20F8DD165085F0D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		743F88C831311F08A96A46E1 /* TrainLogTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrainLogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACC5A9E7301331E1001B752E /* TrainLog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrainLog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E12C434AF2964AC93E3C4507 /* MigrationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MigrationTests.swift; path = MigrationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		ACC5A9E9301331E1001B752E /* TrainLog */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = TrainLog;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		591EED1560876685859078DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37670A44C1BDB1883DD439BA /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ACC5A9E4301331E1001B752E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -29,11 +57,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		14145C44C66046AB2EA03685 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F87EF8E299FD04F8D3154F9C /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		86951E8A32A0068D6A643903 /* TrainLogTests */ = {
+			isa = PBXGroup;
+			children = (
+				E12C434AF2964AC93E3C4507 /* MigrationTests.swift */,
+			);
+			name = TrainLogTests;
+			path = TrainLogTests;
+			sourceTree = "<group>";
+		};
 		ACC5A9DE301331E1001B752E = {
 			isa = PBXGroup;
 			children = (
 				ACC5A9E9301331E1001B752E /* TrainLog */,
 				ACC5A9E8301331E1001B752E /* Products */,
+				14145C44C66046AB2EA03685 /* Frameworks */,
+				86951E8A32A0068D6A643903 /* TrainLogTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -41,8 +88,17 @@
 			isa = PBXGroup;
 			children = (
 				ACC5A9E7301331E1001B752E /* TrainLog.app */,
+				743F88C831311F08A96A46E1 /* TrainLogTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		F87EF8E299FD04F8D3154F9C /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				681D78EBE20F8DD165085F0D /* Foundation.framework */,
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -64,11 +120,27 @@
 				ACC5A9E9301331E1001B752E /* TrainLog */,
 			);
 			name = TrainLog;
-			packageProductDependencies = (
-			);
 			productName = TrainLog;
 			productReference = ACC5A9E7301331E1001B752E /* TrainLog.app */;
 			productType = "com.apple.product-type.application";
+		};
+		CF6719E3B32D7D1AC02FD047 /* TrainLogTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A9C7163F5CA0B679F6ACB486 /* Build configuration list for PBXNativeTarget "TrainLogTests" */;
+			buildPhases = (
+				9728F04D2A8649BD53C6B5E5 /* Sources */,
+				591EED1560876685859078DF /* Frameworks */,
+				8399E32700D1AED442397F52 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5206ADC37D7D23495E758A8A /* PBXTargetDependency */,
+			);
+			name = TrainLogTests;
+			productName = TrainLogTests;
+			productReference = 743F88C831311F08A96A46E1 /* TrainLogTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -100,11 +172,19 @@
 			projectRoot = "";
 			targets = (
 				ACC5A9E6301331E1001B752E /* TrainLog */,
+				CF6719E3B32D7D1AC02FD047 /* TrainLogTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		8399E32700D1AED442397F52 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ACC5A9E5301331E1001B752E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +195,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9728F04D2A8649BD53C6B5E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				371E550ED17FF9501A6CC16F /* MigrationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		ACC5A9E3301331E1001B752E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +212,51 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		5206ADC37D7D23495E758A8A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TrainLog;
+			target = ACC5A9E6301331E1001B752E /* TrainLog */;
+			targetProxy = C8B6B3FB5081D41FB011FC1C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		00D6A8408A8EDD67119E2443 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SM8JGRFPQU;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.uwaisalqadri.TrainLogTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TrainLog.app/TrainLog";
+			};
+			name = Debug;
+		};
+		3048CDBE999782180DF258CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SM8JGRFPQU;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.uwaisalqadri.TrainLogTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TrainLog.app/TrainLog";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		ACC5A9F2301331E3001B752E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -313,6 +445,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A9C7163F5CA0B679F6ACB486 /* Build configuration list for PBXNativeTarget "TrainLogTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3048CDBE999782180DF258CA /* Release */,
+				00D6A8408A8EDD67119E2443 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		ACC5A9E2301331E1001B752E /* Build configuration list for PBXProject "TrainLog" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

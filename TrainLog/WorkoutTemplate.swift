@@ -11,7 +11,9 @@ struct WorkoutTemplate: Identifiable {
             "Incline DB Press",
             "Overhead Press",
             "Lat Pull",
-            "Cable Triceps Pressdown"
+            "Cable Triceps Pressdown",
+            "Chest Fly",
+            "Seated Row"
         ])
     ]
 
