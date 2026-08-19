@@ -7,6 +7,7 @@ struct SessionView: View {
     @State private var copiedFeedback = false
     @State private var addedExerciseNames: [String] = []
     @State private var newExerciseName = ""
+    @State private var restStartedAt: Date?
 
     private var exerciseNames: [String] {
         let templateNames = WorkoutTemplate.template(named: session.templateName)?.exerciseNames ?? []
@@ -34,6 +35,7 @@ struct SessionView: View {
                         set.session = session
                         session.sets.append(set)
                         persist()
+                        restStartedAt = Date()
                     },
                     onDelete: { set in
                         session.sets.removeAll { $0.id == set.id }
@@ -81,11 +83,42 @@ struct SessionView: View {
             persist()
             UserDefaults.standard.removeObject(forKey: WorkoutSession.lastOpenedIDKey)
         }
+        .safeAreaInset(edge: .bottom) {
+            if let restStartedAt {
+                RestStopwatchBar(startedAt: restStartedAt) {
+                    self.restStartedAt = Date()
+                }
+            }
+        }
     }
 
     private func persist() {
         modelContext.insert(session)
         try? modelContext.save()
+    }
+}
+
+private struct RestStopwatchBar: View {
+    let startedAt: Date
+    let onReset: () -> Void
+
+    var body: some View {
+        TimelineView(.periodic(from: startedAt, by: 1)) { context in
+            HStack {
+                Image(systemName: "stopwatch")
+                Text("Rest: \(formattedElapsed(since: startedAt, now: context.date))")
+                    .monospacedDigit()
+                Spacer()
+                Button("Reset", action: onReset)
+            }
+            .padding()
+            .background(.bar)
+        }
+    }
+
+    private func formattedElapsed(since start: Date, now: Date) -> String {
+        let seconds = max(0, Int(now.timeIntervalSince(start)))
+        return String(format: "%d:%02d", seconds / 60, seconds % 60)
     }
 }
 
